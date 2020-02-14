@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <title>歌曲列表</title>
+    <style>
+        table{
+            /* 为表格设置合并边框模型 */
+            border-collapse: collapse;
+            width: 1000px;
+        }
+        th,td{
+            border:1px solid #ccc;
+            height:40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<span><a href="/">返回主页</a></span>
+<h2>歌曲管理</h2>
+<form action="/musics/add" method="post" accept-charset="utf-8">
+    <table>
+    <tr>
+        <td> <label>歌曲名称：</label><input type="text" id="Sname" name="Sname" placeholder="歌曲名称" /> </td>
+        <td> <label>演唱者：</label><input type="text" id="Songer" name="Songer" placeholder="演唱者" /> </td>
+        <td> <label>上传者：</label><input type="text" id="Uploader" name="Uploader" placeholder="上传者" /> </td>
+    </tr>
+    <tr>
+        <td> <label>歌曲类型：</label><input type="text" id="Stype" name="Stype" placeholder="歌曲类型" /> </td>
+        <td> <label>上传时间：</label><input type="text" id="uploadertime" name="uploadertime" placeholder="上传时间" /> </td>
+        <td> <label>歌曲简介：</label><input type="text" id="Note" name="Note" placeholder="歌曲简介" /> </td>
+    </tr>
+    <tr>
+        <td> <label>歌曲文件：</label><input type="text" id="Surl" name="Surl" placeholder="歌曲文件" /> </td>
+        <td> <label>点击次数：</label><input type="text" id="clickcount" name="clickcount" placeholder="点击次数" /> </td>
+        <td> <label>所属专辑：</label><input type="text" id="special" name="special" placeholder="所属专辑" /> </td>
+    </tr>
+    </table>
+    <p> <input type="submit" value="新增" />  <input type="button" id="btn" value="修改" /></p>
+</form>
+<h2>歌曲列表</h2>
+<table id="Top_Table" class="table table-hover table-striped">
+    <tr>
+        <th>编号</th>
+        <th>歌曲名称</th>
+        <th>演唱者</th>
+        <th>上传者</th>
+        <th>歌曲类型</th>
+        <th>上传时间</th>
+        <th>歌曲简介</th>
+        <th>歌曲文件</th>
+        <th>点击次数</th>
+        <th>所属专辑</th>
+        <th>所属专辑</th>
+    </tr>
+    <% for(var i = 0;i < musics.length;i++ ){ %>
+    <tr>
+        <td><%= musics[i]._id.toString() %></td>
+        <td><%= musics[i].Sname %></td>
+        <td><%= musics[i].Songer %></td>
+        <td><%= musics[i].Uploader %></td>
+        <td><%= musics[i].Stype %></td>
+        <td><%= musics[i].uploadertime %></td>
+        <td><%= musics[i].Note %></td>
+        <td><%= musics[i].Surl %></td>
+        <td><%= musics[i].clickcount %></td>
+        <td><%= musics[i].special %></td>
+        <td><input class="Top_Edit" type="button"  value="编辑" /><input class="Top_Del" type="button"  value="删除" /></td>
+    </tr>
+    <% } %>
+</table>
+<span>合计：<%= musics.length %></span>
+
+<script type="text/javascript">
+    let tempModel = {
+    _id: "",
+    Sname: "",
+    Songer: "",
+    Uploader: "",
+    Stype: "",
+    uploadtime: "",
+    Note: "",
+    Surl: "",
+    clickcount: "",
+    special: ""
+     };
+    let Top_Del = document.getElementsByClassName("Top_Del");
+    for (let i = 0; i < Top_Del.length; i++) {
+
+        Top_Del[i].index = i;
+
+        Top_Del[i].onclick = function () {
+
+            let table = document.getElementById("Top_Table");
+
+            /*获取选中的行 */
+            let child = table.getElementsByTagName("tr")[this.index + 1];
+
+            /*获取选择行的所有列*/
+            let SZ_col = child.getElementsByTagName("td");
+
+            tempModel._id= SZ_col[0].innerHTML;
+            tempModel.Sname= SZ_col[1].innerHTML;
+            tempModel.Songer= SZ_col[2].innerHTML;
+            tempModel.Uploader= SZ_col[3].innerHTML;
+            tempModel.Stype= SZ_col[4].innerHTML;
+            tempModel.uploadtime= SZ_col[5].innerHTML;
+            tempModel.Note= SZ_col[6].innerHTML;
+            tempModel.Surl= SZ_col[7].innerHTML;
+            tempModel.clickcount= SZ_col[8].innerHTML;
+            tempModel.special= SZ_col[9].innerHTML;
+
+            // document.getElementById("Sname").value = SZ_col[1].innerHTML;
+            // document.getElementById("Songer").value = SZ_col[2].innerHTML;
+            // document.getElementById("Uploader").value = SZ_col[3].innerHTML;
+            // document.getElementById("Stype").value = SZ_col[4].innerHTML;
+            // document.getElementById("uploadertime").value = SZ_col[5].innerHTML;
+            // document.getElementById("Note").value = SZ_col[6].innerHTML;
+            // document.getElementById("Surl").value = SZ_col[7].innerHTML;
+            // document.getElementById("clickcount").value = SZ_col[8].innerHTML;
+            // document.getElementById("special").value = SZ_col[9].innerHTML;
+            $.ajax({
+                url:"/musics/remove",
+                type:"post",
+                dataType: "json",
+                data:tempModel,
+                // contentType:false, //- 必须false才会自动加上正确的Content-Type
+                // processData: false, //- 必须false才会避开jQuery对 formdata 的默认处理,XMLHttpRequest会对 formdata 进行正确的处理
+
+                success: function (resData) {
+                    if (resData.result === 1) {
+                        //更新页面列表
+                        alert('resData');
+                    }
+                },
+                error: function (error) {
+                    alert('error:' + error);
+                }
+            });
+        }
+    }
+
+     // $(function () {
+     //         $("#uploadData").on("click", function () {
+     //                 alert("上传数据到MongoDB中");
+     //                 //构造数据类
+     //                 tempModel.SortID = $("#SortID").find("input").val();
+     //                 tempModel.Name = $("#Name").find("input").val();
+     //                 tempModel.Sex = $("#Sex").find("input").val();
+     //                 tempModel.Address = $("#Address").find("input").val();
+     //                 tempModel.timeDate = Date.now();
+     //
+     //                 //通过Ajax更新数据
+     //                 $.ajax({
+     //                         type: 'post',
+     //                         // url: "http://localhost:3000/insert",
+     //                     url: "/insert",
+     //                         dataType: "json",
+     //                         data: tempModel,
+     //                         success: function (resData) {
+     //                             if (resData.result == 1) {
+     //                                     //更新页面列表
+     //                                     alert('resData');
+     //                                 }
+     //                         },
+     //                     error: function (error) {
+     //                             alert('error:' + error);
+     //                         }
+     //                 });
+     //             });
+     //     });
+</script>
+</body>
+</html>
