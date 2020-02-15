@@ -20,7 +20,7 @@ var musicScheMa = new Schema({
     Songer: 'String',
     Uploader: 'String',
     Stype:'String',
-    uploadertime:'String',
+    uploadertime:'date',
     Note:'String',
     Surl:'String',
     clickcount:'String',

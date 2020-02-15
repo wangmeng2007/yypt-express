@@ -1,20 +1,28 @@
 const mongoose=require('mongoose')
 var express = require('express');
 var router = express.Router();
-var db = mongoose.model("users");
+const db = require('../model/users').user
 
-router.get('/', function (req, res) {
-    res.render('register');
-});
+//定义返回变量格式
+var resData;
+router.use(function (req, res, next) {
+    resData = {
+        code: 0,
+        message: ''
+    };
+    next();
+})
 
 router.post('/', function (req, res, next) {
     // 拿到前台传过来的值
     console.log("Data from submit form");
     var username = req.body.username;
+    var userage = req.body.userage;
     var password = req.body.password;
     var repassword = req.body.repassword;
     // console.log(req)
     console.log(username)
+    console.log(userage)
     console.log(password)
     //用户名不能空
     if (username == '') {
@@ -39,8 +47,8 @@ router.post('/', function (req, res, next) {
     }
 
     // 查找数据库有没有相同的用户名 ，没有的话保存到数据库
-    db.User.findOne({
-        username: username
+    db.findOne({
+        name: username
     }).then(function (userInfo) {
         console.log("查询结果：" + userInfo); //若控制台返回空表示没有查到数据
         if (userInfo) {
@@ -51,9 +59,10 @@ router.post('/', function (req, res, next) {
             return;
         }
         //用户名没有被注册则将用户保存在数据库中
-        var user = new db.User({
-            username: username,
-            password: password
+        var user = new db({
+            name: username,
+            password: password,
+            age: userage
         }); //通过操作对象操作数据库
         return user.save();
     }).then(function (newUserInfo) {

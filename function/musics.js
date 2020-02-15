@@ -9,7 +9,12 @@ module.exports = {
     },
     getMusicn(Sname){
         return Music
-            .find({name: Sname})
+            .find({Sname: Sname})
+            .exec()
+    },
+    getMusicn2(special){
+        return Music
+            .find({special: special})
             .exec()
     },
     getMusic(id){

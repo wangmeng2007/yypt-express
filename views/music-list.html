@@ -20,7 +20,7 @@
 <body>
 <span><a href="/">返回主页</a></span>
 <h2>歌曲管理</h2>
-<form action="/musics/add" method="post" accept-charset="utf-8">
+<form action="/api/musics/add" method="post" accept-charset="utf-8">
     <table>
     <tr>
         <td> <label>歌曲名称：</label><input type="text" id="Sname" name="Sname" placeholder="歌曲名称" /> </td>
@@ -53,7 +53,7 @@
         <th>歌曲文件</th>
         <th>点击次数</th>
         <th>所属专辑</th>
-        <th>所属专辑</th>
+        <th>操作</th>
     </tr>
     <% for(var i = 0;i < musics.length;i++ ){ %>
     <tr>

@@ -8,8 +8,9 @@ var dbu = require("../function/users");
 router.get('/', function(req, res, next) {
   dbu.getUsers()
       .then((users) => {
-        res.render('../views/user-list.html', {users})
-        //res.send(users)
+        //res.render('../views/user-list.html', {users})
+          res.json(users);
+          return;
       })
   // dbu.find({}).exec(function (err,users) {
   //   if(!err) res.send( users);
@@ -17,11 +18,13 @@ router.get('/', function(req, res, next) {
 });
 router.post('/find', function(req, res, next) {
     let user = req.body
-    let name = user.name1
+    let name = user.Sname
     dbu.getUsern(name)
         .then((users) => {
-            console.log(users)
-            res.render('../views/user-list.html', {users})
+            console.log(users);
+            res.json(users);
+            return;
+            // res.render('../views/user-list.html', {users})
         })
 });
 // router.get('/add', (req, res) => {
