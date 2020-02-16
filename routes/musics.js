@@ -91,10 +91,15 @@ router.get('/:mussicId/edit', (req, res) => {
 })
 
 router.post('/:musicId/edit', (req, res) => {
-    let user = req.body
+    let music = req.body
+    console.log(music)
+    console.log(req.params.musicId)
     dbm.editMusic(req.params.musicId, music)
         .then((result)=>{
-            res.redirect('/')
+            // res.redirect('/')
+            // res.json(result)
+            // return
+            res.redirect('/api/musics')
         })
 })
 
